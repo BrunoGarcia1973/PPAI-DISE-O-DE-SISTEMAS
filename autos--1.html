@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Compra y Venta de Vehículos</title>
+    <style>
+        body {
+            background-image: url("https://www.shutterstock.com/image-photo/blurred-photo-new-red-car-600nw-2168043939.jpg");
+            background-size: cover;      /* Que la imagen cubra toda la pantalla */
+            background-position: center;
+            background-position: top;
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            color: rgb(0, 0, 0);
+        }
+        h1 {
+            color: #020202;
+        }
+        select {
+            padding: 8px;
+            font-size: 16px;
+        }
+        .car-list {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .car-card img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+            border-radius: 6px;
+        }
+        .car-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+        .car-price {
+            color: rgb(15, 15, 15);
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Compra y Venta de Vehículos</h1>
+
+    <label for="marca">Buscar por marca:</label>
+    <select id="marca">
+        <option value="">-- Seleccione una marca --</option>
+        <option value="Fiat">Fiat</option>
+        <option value="Chevrolet">Chevrolet</option>
+        <option value="Volkswagen">Volkswagen</option>
+        <option value="Mercedes">Mercedes</option>
+    </select>
+
+    <div class="car-list" id="car-list">
+        <!-- Autos filtrados aparecerán acá -->
+    </div>
+
+    <script>
+        // Datos simulados de autos
+        const autos = [
+            // Fiat
+            { marca: "Fiat", nombre: "Fiat Uno", precio: 12000, imagen: "https://resizer.iproimg.com/unsafe/1280x720/filters:format(webp):quality(85):max_bytes(102400)/assets.iprofesional.com/assets/jpg/2022/07/538834_landscape.jpg" },
+            { marca: "Fiat", nombre: "Fiat Argo", precio: 15000, imagen: "https://cdn.motor1.com/images/mgl/bgg4yr/s1/fiat-argo-s-design-2023.jpg" },
+            { marca: "Fiat", nombre: "Fiat Cronos", precio: 17000, imagen: "https://cronos.fiat.com.ar//asset/versoes/driveMT/negro.png" },
+
+            // Chevrolet
+            { marca: "Chevrolet", nombre: "Chevrolet Onix", precio: 14000, imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/2020_SAIC-GM_Chevrolet_Onix_sedan.jpg/960px-2020_SAIC-GM_Chevrolet_Onix_sedan.jpg"},
+            { marca: "Chevrolet", nombre: "Chevrolet Cruze", precio: 20000, imagen: "https://cdn.motor1.com/images/mgl/1byjM/s1/4x3/critica-chevrolet-cruze-5-hatchback.webp" },
+            { marca: "Chevrolet", nombre: "Chevrolet Tracker", precio: 22000, imagen: "https://www.chevrolet-sanjorge.com.ar/content/dam/chevrolet/sa/ar/es/master/home/crossovers-and-suvs/tracker/tracker-2026/2-colorizer/tracker-ltz/exterior/rojojinxltz.png?imwidth=1920" },
+
+            // Volkswagen
+            { marca: "Volkswagen", nombre: "Volkswagen Gol", precio: 13000, imagen: "https://http2.mlstatic.com/D_685432-MLA88810493580_082025-C.jpg" },
+            { marca: "Volkswagen", nombre: "Volkswagen Polo", precio: 18000, imagen: "https://http2.mlstatic.com/D_949793-MLA89153889343_082025-C.jpg" },
+            { marca: "Volkswagen", nombre: "Volkswagen Vento", precio: 21000, imagen: "https://cdn.motor1.com/images/mgl/lE38pN/s3/vw-vento-gli-restyling-2025.jpg" },
+
+            // Mercedes
+            { marca: "Mercedes", nombre: "Mercedes A-Class", precio: 35000, imagen: "https://acroadtrip.blob.core.windows.net/catalogo-imagenes/s/RT_V_45c2aca2e336490d98bfe85fe3944874.jpg" },
+            { marca: "Mercedes", nombre: "Mercedes C-Class", precio: 45000, imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrMbbpfZ3guB3R_3jxoRTYjqrMdkxangIjBw&s" },
+            { marca: "Mercedes", nombre: "Mercedes GLA", precio: 42000, imagen: "https://www.mercedes-benz.com.ar/content/dam/hq/passengercars/cars/gla/gla-suv-h247-fl-pi/overview/exterior/03-2023/images/mercedes-gla-h247-exterior-hotspot-start-3302x1858-03-2023.jpg/1740017923519.jpg?im=Crop,rect=(0,0,3302,1857);Resize=(1850,1040)" }
+        ];
+
+        const selectMarca = document.getElementById('marca');
+        const carList = document.getElementById('car-list');
+
+        selectMarca.addEventListener('change', () => {
+            const marcaSeleccionada = selectMarca.value;
+            carList.innerHTML = ''; // Limpiar lista
+
+            if (marcaSeleccionada === '') {
+                carList.innerHTML = '<p>Por favor, seleccione una marca para ver los vehículos.</p>';
+                return;
+            }
+
+            // Filtrar autos por marca
+            const autosFiltrados = autos.filter(auto => auto.marca === marcaSeleccionada);
+
+            if (autosFiltrados.length === 0) {
+                carList.innerHTML = '<p>No hay vehículos disponibles para esta marca.</p>';
+                return;
+            }
+
+            // Mostrar autos filtrados
+            autosFiltrados.forEach(auto => {
+                const card = document.createElement('div');
+                card.className = 'car-card';
+                card.innerHTML = `
+                    <img src="${auto.imagen}" alt="${auto.nombre}" style="width:100%; height: auto; border-radius: 4px; margin-bottom: 10px;">
+                    <div class="car-name">${auto.nombre}</div>
+                    <div class="car-price">Precio: $${auto.precio.toLocaleString()}</div>`;
+                carList.appendChild(card);
+            });
+        });
+
+        // Mensaje inicial
+        carList.innerHTML = '<p>Por favor, seleccione una marca para ver los vehículos.</p>';
+    </script>
+
+</body>
+</html>
